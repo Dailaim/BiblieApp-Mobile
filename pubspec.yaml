@@ -40,11 +40,15 @@ dependencies:
   hooks_riverpod: ^2.4.0
   line_icons: ^2.0.3
   provider: ^6.0.5
+  riverpod_annotation: ^2.1.5
+  shared_preferences: ^2.2.1
 
 dev_dependencies:
   flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
+  riverpod_generator: ^2.3.1
+  riverpod_lint: ^2.0.3
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
