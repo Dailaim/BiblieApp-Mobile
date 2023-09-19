@@ -1,7 +1,10 @@
+import 'package:flutterpractic/core/enums/chapter.dart';
+
 class BibleBook {
   final String name;
   final int chapters;
   final Testament _testament;
+  Map<int, BibleChapter?> chaptersMap = {};
 
   String get testament => _testament == Testament.ANTIGUO_TESTAMENTO
       ? 'Antiguo Testamento'
@@ -9,150 +12,195 @@ class BibleBook {
 
   Testament get testamentType => _testament;
 
-  const BibleBook({
+  BibleBook({
     required this.name,
     required this.chapters,
     required Testament testament,
   }) : _testament = testament;
+
+  void addChapter(BibleChapter chapter) {
+    chaptersMap = {
+      ...chaptersMap,
+      chapter.number: chapter,
+    };
+  }
+
+  void deleteChapter(int chapter) {
+    chaptersMap.remove(chapter);
+  }
+
+  BibleBook.fromJson(Map<String, dynamic> json)
+      : name = json['name'],
+        chapters = json['chapters'],
+        _testament = json['testament'] == 'Antiguo Testamento'
+            ? Testament.ANTIGUO_TESTAMENTO
+            : Testament.NUEVO_TESTAMENTO,
+        chaptersMap = (json['chaptersMap'] as Map<String, dynamic>)
+            .map<int, BibleChapter>(
+                (k, v) => MapEntry(int.parse(k), BibleChapter.fromJson(v)));
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'chapters': chapters,
+      'testament': testament,
+      'chaptersMap': chaptersMap
+          .map<String, dynamic>((k, v) => MapEntry(k.toString(), v?.toJson())),
+    };
+  }
 }
 
 enum Testament { ANTIGUO_TESTAMENTO, NUEVO_TESTAMENTO }
 
-const bibleBooks = <BibleBook>[
-  BibleBook(
+Map<String, BibleBook> bibleBooksMap = {
+  "Genesis": BibleBook(
       name: "Genesis", chapters: 50, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "Exodo": BibleBook(
       name: "Exodo", chapters: 40, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "Levitico": BibleBook(
       name: "Levitico", chapters: 27, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "Numeros": BibleBook(
       name: "Numeros", chapters: 36, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "Deuteronomio": BibleBook(
       name: "Deuteronomio",
       chapters: 34,
       testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "Josue": BibleBook(
       name: "Josue", chapters: 24, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "Jueces": BibleBook(
       name: "Jueces", chapters: 21, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(name: "Rut", chapters: 4, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "Rut": BibleBook(
+      name: "Rut", chapters: 4, testament: Testament.ANTIGUO_TESTAMENTO),
+  "1-Samuel": BibleBook(
       name: "1-Samuel", chapters: 31, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "2-Samuel": BibleBook(
       name: "2-Samuel", chapters: 24, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "1-Reyes": BibleBook(
       name: "1-Reyes", chapters: 22, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "2-Reyes": BibleBook(
       name: "2-Reyes", chapters: 25, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "1-Cronicas": BibleBook(
       name: "1-Cronicas",
       chapters: 29,
       testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "2-Cronicas": BibleBook(
       name: "2-Cronicas",
       chapters: 36,
       testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "Esdras": BibleBook(
       name: "Esdras", chapters: 10, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "Nehemias": BibleBook(
       name: "Nehemias", chapters: 13, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "Ester": BibleBook(
       name: "Ester", chapters: 10, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(name: "Job", chapters: 42, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "Job": BibleBook(
+      name: "Job", chapters: 42, testament: Testament.ANTIGUO_TESTAMENTO),
+  "Salmos": BibleBook(
       name: "Salmos", chapters: 150, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "Proverbios": BibleBook(
       name: "Proverbios",
       chapters: 31,
       testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "Eclesiastes": BibleBook(
       name: "Eclesiastes",
       chapters: 12,
       testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "Cantares": BibleBook(
       name: "Cantares", chapters: 8, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "Isaias": BibleBook(
       name: "Isaias", chapters: 66, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "Jeremias": BibleBook(
       name: "Jeremias", chapters: 52, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "Lamentaciones": BibleBook(
       name: "Lamentaciones",
       chapters: 5,
       testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "Ezequiel": BibleBook(
       name: "Ezequiel", chapters: 48, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "Daniel": BibleBook(
       name: "Daniel", chapters: 12, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "Oseas": BibleBook(
       name: "Oseas", chapters: 14, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(name: "Joel", chapters: 3, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(name: "Amos", chapters: 9, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "Joel": BibleBook(
+      name: "Joel", chapters: 3, testament: Testament.ANTIGUO_TESTAMENTO),
+  "Amos": BibleBook(
+      name: "Amos", chapters: 9, testament: Testament.ANTIGUO_TESTAMENTO),
+  "Abdias": BibleBook(
       name: "Abdias", chapters: 1, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "Jonas": BibleBook(
       name: "Jonas", chapters: 4, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "Miqueas": BibleBook(
       name: "Miqueas", chapters: 7, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "Nahum": BibleBook(
       name: "Nahum", chapters: 3, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "Habacuc": BibleBook(
       name: "Habacuc", chapters: 3, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "Sofonias": BibleBook(
       name: "Sofonias", chapters: 3, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "Hageo": BibleBook(
       name: "Hageo", chapters: 2, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "Zacarias": BibleBook(
       name: "Zacarias", chapters: 14, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(
+  "Malaquias": BibleBook(
       name: "Malaquias", chapters: 4, testament: Testament.ANTIGUO_TESTAMENTO),
-  BibleBook(name: "Mateo", chapters: 28, testament: Testament.NUEVO_TESTAMENTO),
-  BibleBook(
+  "Mateo": BibleBook(
+      name: "Mateo", chapters: 28, testament: Testament.NUEVO_TESTAMENTO),
+  "Marcos": BibleBook(
       name: "Marcos", chapters: 16, testament: Testament.NUEVO_TESTAMENTO),
-  BibleBook(name: "Lucas", chapters: 24, testament: Testament.NUEVO_TESTAMENTO),
-  BibleBook(name: "Juan", chapters: 21, testament: Testament.NUEVO_TESTAMENTO),
-  BibleBook(
+  "Lucas": BibleBook(
+      name: "Lucas", chapters: 24, testament: Testament.NUEVO_TESTAMENTO),
+  "Juan": BibleBook(
+      name: "Juan", chapters: 21, testament: Testament.NUEVO_TESTAMENTO),
+  "Hechos": BibleBook(
       name: "Hechos", chapters: 28, testament: Testament.NUEVO_TESTAMENTO),
-  BibleBook(
+  "Romanos": BibleBook(
       name: "Romanos", chapters: 16, testament: Testament.NUEVO_TESTAMENTO),
-  BibleBook(
+  "1-Corintios": BibleBook(
       name: "1-Corintios", chapters: 16, testament: Testament.NUEVO_TESTAMENTO),
-  BibleBook(
+  "2-Corintios": BibleBook(
       name: "2-Corintios", chapters: 13, testament: Testament.NUEVO_TESTAMENTO),
-  BibleBook(
+  "Galatas": BibleBook(
       name: "Galatas", chapters: 6, testament: Testament.NUEVO_TESTAMENTO),
-  BibleBook(
+  "Efesios": BibleBook(
       name: "Efesios", chapters: 6, testament: Testament.NUEVO_TESTAMENTO),
-  BibleBook(
+  "Filipenses": BibleBook(
       name: "Filipenses", chapters: 4, testament: Testament.NUEVO_TESTAMENTO),
-  BibleBook(
+  "Colosenses": BibleBook(
       name: "Colosenses", chapters: 4, testament: Testament.NUEVO_TESTAMENTO),
-  BibleBook(
+  "1-Tesalonicenses": BibleBook(
       name: "1-Tesalonicenses",
       chapters: 5,
       testament: Testament.NUEVO_TESTAMENTO),
-  BibleBook(
+  "2-Tesalonicenses": BibleBook(
       name: "2-Tesalonicenses",
       chapters: 3,
       testament: Testament.NUEVO_TESTAMENTO),
-  BibleBook(
+  "1-Timoteo": BibleBook(
       name: "1-Timoteo", chapters: 6, testament: Testament.NUEVO_TESTAMENTO),
-  BibleBook(
+  "2-Timoteo": BibleBook(
       name: "2-Timoteo", chapters: 4, testament: Testament.NUEVO_TESTAMENTO),
-  BibleBook(name: "Tito", chapters: 3, testament: Testament.NUEVO_TESTAMENTO),
-  BibleBook(
+  "Tito": BibleBook(
+      name: "Tito", chapters: 3, testament: Testament.NUEVO_TESTAMENTO),
+  "Filemon": BibleBook(
       name: "Filemon", chapters: 1, testament: Testament.NUEVO_TESTAMENTO),
-  BibleBook(
+  "Hebreos": BibleBook(
       name: "Hebreos", chapters: 13, testament: Testament.NUEVO_TESTAMENTO),
-  BibleBook(
+  "Santiago": BibleBook(
       name: "Santiago", chapters: 5, testament: Testament.NUEVO_TESTAMENTO),
-  BibleBook(
+  "1-Pedro": BibleBook(
       name: "1-Pedro", chapters: 5, testament: Testament.NUEVO_TESTAMENTO),
-  BibleBook(
+  "2-Pedro": BibleBook(
       name: "2-Pedro", chapters: 3, testament: Testament.NUEVO_TESTAMENTO),
-  BibleBook(name: "1-Juan", chapters: 5, testament: Testament.NUEVO_TESTAMENTO),
-  BibleBook(name: "2-Juan", chapters: 1, testament: Testament.NUEVO_TESTAMENTO),
-  BibleBook(name: "3-Juan", chapters: 1, testament: Testament.NUEVO_TESTAMENTO),
-  BibleBook(name: "Judas", chapters: 1, testament: Testament.NUEVO_TESTAMENTO),
-  BibleBook(
+  "1-Juan": BibleBook(
+      name: "1-Juan", chapters: 5, testament: Testament.NUEVO_TESTAMENTO),
+  "2-Juan": BibleBook(
+      name: "2-Juan", chapters: 1, testament: Testament.NUEVO_TESTAMENTO),
+  "3-Juan": BibleBook(
+      name: "3-Juan", chapters: 1, testament: Testament.NUEVO_TESTAMENTO),
+  "Judas": BibleBook(
+      name: "Judas", chapters: 1, testament: Testament.NUEVO_TESTAMENTO),
+  "Apocalipsis": BibleBook(
       name: "Apocalipsis", chapters: 22, testament: Testament.NUEVO_TESTAMENTO)
-];
+};
+
+final bibleBooks = bibleBooksMap.values.toList();
