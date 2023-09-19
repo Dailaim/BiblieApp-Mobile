@@ -40,7 +40,7 @@ class FavoritesScreen extends HookConsumerWidget {
                       onPressed: () => {
                         ref
                             .read(ThemeProvider.notifier)
-                            .setTheme(themeApp == 0 ? 3 : 0)
+                            .setTheme(themeApp + 1 < 9 ? themeApp + 1 : 0)
                       },
                       child: const Text('setTheme'),
                     ),
