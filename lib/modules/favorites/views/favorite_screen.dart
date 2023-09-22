@@ -26,8 +26,8 @@ class FavoritesScreen extends HookConsumerWidget {
               ),
               HookConsumer(builder: (context, ref, child) {
                 final countP = ref.watch(myAutoDisposeProvider);
-                final themeApp = ref.watch(ThemeProvider).selectedTheme;
-                final isDark = ref.watch(ThemeProvider).isDark;
+                final themeApp = ref.watch(colorThemeProvider);
+
                 return Column(
                   children: [
                     Text("Count: ${countP}"),
@@ -39,14 +39,14 @@ class FavoritesScreen extends HookConsumerWidget {
                     OutlinedButton(
                       onPressed: () => {
                         ref
-                            .read(ThemeProvider.notifier)
-                            .setTheme(themeApp + 1 < 9 ? themeApp + 1 : 0)
+                            .read(colorThemeProvider.notifier)
+                            .toggleTheme(themeApp + 1 < 9 ? themeApp + 1 : 0)
                       },
                       child: const Text('setTheme'),
                     ),
                     OutlinedButton(
                       onPressed: () =>
-                          {ref.read(ThemeProvider.notifier).setDark(!isDark)},
+                          {ref.read(darkThemeProvider.notifier).toggleDark()},
                       child: const Text('setDark'),
                     ),
                   ],
