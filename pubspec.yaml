@@ -44,6 +44,8 @@ dependencies:
   shared_preferences: ^2.2.1
 
 dev_dependencies:
+  custom_lint: ^0.5.3
+  build_runner: ^2.4.6
   flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
