@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutterpractic/core/contexts/authContext.dart';
+import 'package:flutterpractic/core/contexts/auth_context.dart';
 import 'package:flutterpractic/modules/auth/validators/confirmpassword.dart';
 import 'package:flutterpractic/modules/auth/validators/email.dart';
 import 'package:flutterpractic/modules/auth/validators/password.dart';
@@ -101,11 +101,11 @@ class RegisterScreen extends HookConsumerWidget {
                     onPressed: () {
                       userOrEmailErrorNotifier.value = null;
                       if (formKey.value.currentState!.validate()) {
-                        ref.read(authProvider.notifier).login(
+                        /* ref.read(authProvider.notifier).login(
                               email: usernameController.text,
                               password: passwordController.text,
                               notifier: userOrEmailErrorNotifier,
-                            );
+                            ); */
 
                         /* final user = CreateUser(
                           username:
