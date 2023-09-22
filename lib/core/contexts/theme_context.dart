@@ -1,24 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutterpractic/core/theme/app_theme.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-class _ThemeContext with ChangeNotifier {
-  int _selectedTheme = 0;
-  bool _isDark = false;
+part 'theme_context.g.dart';
 
-  int get selectedTheme => _selectedTheme;
-  bool get isDark => _isDark;
-
-  void setTheme(int theme) {
-    _selectedTheme = theme;
-    notifyListeners();
+@riverpod
+class ColorTheme extends _$ColorTheme {
+  @override
+  int build() {
+    return 0;
   }
 
-  void setDark(bool dark) {
-    _isDark = dark;
-    notifyListeners();
+  void toggleTheme(int theme) {
+    if (theme < colorThemes.length - 1) {
+      state = theme;
+    }
   }
 }
 
-final ThemeProvider = ChangeNotifierProvider<_ThemeContext>((ref) {
-  return _ThemeContext();
-});
+@riverpod
+class DarkTheme extends _$DarkTheme {
+  @override
+  bool build() {
+    return false;
+  }
+
+  void toggleDark() {
+    state = !state;
+  }
+}

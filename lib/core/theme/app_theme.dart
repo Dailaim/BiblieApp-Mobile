@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const List<Color> _colorThemes = <Color>[
+const List<Color> colorThemes = <Color>[
   Colors.blue,
   Colors.red,
   Colors.green,
@@ -18,12 +18,12 @@ class AppTheme {
   final bool isDark;
 
   const AppTheme({int selectedTheme = 0, this.isDark = false})
-      : assert(selectedTheme >= 0 && selectedTheme < _colorThemes.length,
-            'selectedTheme must be between 0 and ${_colorThemes.length - 1}'),
+      : assert(selectedTheme >= 0 && selectedTheme < colorThemes.length,
+            'selectedTheme must be between 0 and ${colorThemes.length - 1}'),
         _selectedTheme = selectedTheme;
 
   ThemeData get themeData => ThemeData(
-        colorSchemeSeed: _colorThemes[_selectedTheme],
+        colorSchemeSeed: colorThemes[_selectedTheme],
         useMaterial3: true,
         brightness: isDark ? Brightness.dark : Brightness.light,
       );
