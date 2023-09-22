@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
-import 'package:flutterpractic/core/contexts/authContext.dart';
+import 'package:flutterpractic/core/contexts/auth_context.dart';
 import 'package:flutterpractic/core/contexts/router_key.dart';
 import 'package:flutterpractic/core/router/auth_router.dart';
 import 'package:flutterpractic/modules/favorites/views/favorite_screen.dart';
@@ -12,8 +12,14 @@ import 'package:flutterpractic/modules/search/views/search_screen.dart';
 import 'package:flutterpractic/shared/widgets/nav_bar.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final goRouterProvider = Provider<GoRouter>((ref) {
+part 'router.g.dart';
+
+@riverpod
+GoRouter goRouter(GoRouterRef ref) {
+  final authRouter = ref.watch(authRouterProvider);
+
   return GoRouter(
     initialLocation: '/',
     routes: <RouteBase>[
@@ -25,7 +31,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
                 body: Consumer(
                   builder: (context, ref, _) {
                     Future.microtask(() {
-                      ref.read(routerKeyProvider.notifier).state = 0;
+                      ref.watch(routerKeyProvider.notifier).state = 0;
                     });
                     return child;
                   },
@@ -100,7 +106,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             redirect: (_, state) {
               final auth = ref.watch(authProvider);
 
-              return auth.token != null ? "/profile" : '/auth/login';
+              final responst = auth.token != null ? '/profile' : '/auth/login';
+
+              print(responst);
+
+              return responst;
             },
             pageBuilder: (context, state) {
               return NoTransitionPage(
@@ -110,7 +120,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               );
             },
           ),
-          authRouter(ref),
+          authRouter
         ],
         builder: (context, state, child) {
           return Scaffold(
@@ -121,4 +131,4 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       ),
     ],
   );
-});
+}

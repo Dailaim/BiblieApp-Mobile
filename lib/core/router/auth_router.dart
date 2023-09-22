@@ -3,8 +3,12 @@ import 'package:flutterpractic/modules/auth/views/login_screen.dart';
 import 'package:flutterpractic/modules/auth/views/register_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-ShellRoute authRouter(ProviderRef<GoRouter> ref) {
+part 'auth_router.g.dart';
+
+@riverpod
+ShellRoute authRouter(AuthRouterRef ref) {
   return ShellRoute(
     builder: (context, state, child) {
       return HookConsumer(
