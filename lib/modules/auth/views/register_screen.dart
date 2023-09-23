@@ -36,11 +36,11 @@ class RegisterScreen extends HookConsumerWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text(
+                  const Text(
                     'Register',
                     style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   ValueListenableBuilder(
                     valueListenable: userOrEmailErrorNotifier,
                     builder: (context, String? serverError, _) => TextFormField(
@@ -50,14 +50,14 @@ class RegisterScreen extends HookConsumerWidget {
                       },
                       decoration: InputDecoration(
                         labelText: 'Username',
-                        border: OutlineInputBorder(),
+                        border: const OutlineInputBorder(),
                         errorText:
                             serverError, // Show server error if it exists
                       ),
                       validator: usernameValidator,
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   ValueListenableBuilder(
                     valueListenable: userOrEmailErrorNotifier,
                     builder: (context, String? serverError, _) => TextFormField(
@@ -67,14 +67,14 @@ class RegisterScreen extends HookConsumerWidget {
                       },
                       decoration: InputDecoration(
                         labelText: 'Email',
-                        border: OutlineInputBorder(),
+                        border: const OutlineInputBorder(),
                         errorText:
                             serverError, // Show server error if it exists
                       ),
                       validator: emailValidator,
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   TextFormField(
                     controller: passwordController,
                     obscureText: true,
@@ -84,7 +84,7 @@ class RegisterScreen extends HookConsumerWidget {
                     ),
                     validator: passwordValidator,
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   TextFormField(
                       controller: confirmPasswordController,
                       obscureText: true,
@@ -96,7 +96,7 @@ class RegisterScreen extends HookConsumerWidget {
                             value,
                             passwordController.text,
                           )),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
                       userOrEmailErrorNotifier.value = null;
@@ -133,11 +133,11 @@ class RegisterScreen extends HookConsumerWidget {
                     },
                     child: const Text('Register'),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Already have an account?'),
+                      const Text('Already have an account?'),
                       TextButton(
                         onPressed: () {
                           context.go('/auth/login');

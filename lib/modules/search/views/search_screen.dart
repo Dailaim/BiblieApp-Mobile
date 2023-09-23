@@ -63,15 +63,17 @@ class SearchScreen extends HookConsumerWidget {
                   return InkWell(
                     child: Card(
                       child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Flexible(
-                              child: Text(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Flexible(
+                          child: Text(
                             result.verse,
                             style: const TextStyle(
                               fontSize: 16.0,
                               overflow: TextOverflow.ellipsis,
                             ),
-                          ))),
+                          ),
+                        ),
+                      ),
                     ),
                     onTap: () {
                       ref.read(bibleProvider.notifier).state =
