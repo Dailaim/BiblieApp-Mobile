@@ -42,9 +42,9 @@ class LoginScreen extends HookConsumerWidget {
                     TextFormField(
                       controller: usernameController,
                       validator: emailValidator,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Email',
-                        border: const OutlineInputBorder(),
+                        border: OutlineInputBorder(),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -57,7 +57,7 @@ class LoginScreen extends HookConsumerWidget {
                         border: OutlineInputBorder(),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
                         if (!formKey.value.currentState!.validate()) return;
@@ -109,40 +109,48 @@ class LoginScreen extends HookConsumerWidget {
       builder: (BuildContext context) {
         return AlertDialog(
           content: Container(
-            padding: EdgeInsets.all(16),
-            child: HookConsumer(builder: (context, ref, child) {
-              final login = ref.watch(AuthLoginProvider(
-                email: email,
-                password: password,
-              ));
-
-              return login.when(
-                data: (data) {
-                  /* // Si la autenticación es exitosa, muestra un mensaje y cierra el diálogo.
+            padding: const EdgeInsets.all(16),
+            child: HookConsumer(
+              builder: (context, ref, child) {
+                final login = ref.watch(
+                  AuthLoginProvider(
+                    email: email,
+                    password: password,
+                  ),
+                );
+                return login.when(
+                  data: (data) {
+                    /* // Si la autenticación es exitosa, muestra un mensaje y cierra el diálogo.
                   Navigator.of(context).pop(); */
-                  return SuccessWidget(
-                    message: "¡Bienvenido!",
-                    onOk: () {
-                      ref.read(authProvider.notifier).setUser(
-                            email: email,
-                            password: password,
-                            token: data.data["token"],
-                          );
-                      ref.read(goRouterProvider).pop();
-                    },
-                  );
-                },
-                error: (error, stack) {
-                  // Si hay un error, muestra el mensaje de error.
-                  return ErrorWidget(
-                    errorMessage:
-                        (error as DioException).response?.data['message'] ??
-                            error.toString(),
-                  );
-                },
-                loading: () => LoadingWidget(),
-              );
-            }),
+                    return SuccessWidget(
+                      message: "¡Bienvenido!",
+                      onOk: () {
+                        ref.read(authProvider.notifier).setUser(
+                              email: email,
+                              password: password,
+                              token: data.data["token"],
+                            );
+                        ref.read(goRouterProvider).pop();
+
+                        Navigator.of(context).pop();
+                      },
+                    );
+                  },
+                  error: (error, stack) {
+                    // Si hay un error, muestra el mensaje de error.
+                    return ErrorWidget(
+                      onOk: () {
+                        Navigator.of(context).pop();
+                      },
+                      errorMessage:
+                          (error as DioException).response?.data['message'] ??
+                              error.toString(),
+                    );
+                  },
+                  loading: () => LoadingWidget(),
+                );
+              },
+            ),
           ),
         );
       },
@@ -162,26 +170,25 @@ class SuccessWidget extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(
+        const Icon(
           Icons.check_circle,
           color: Colors.green,
           size: 48,
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         Text(
           message,
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
           ),
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         ElevatedButton(
           onPressed: () {
             onOk?.call();
-            Navigator.of(context).pop();
           },
-          child: Text('OK'),
+          child: const Text('OK'),
         ),
       ],
     );
@@ -210,33 +217,35 @@ class LoadingWidget extends StatelessWidget {
 
 class ErrorWidget extends StatelessWidget {
   final String errorMessage;
+  final void Function()? onOk;
 
-  const ErrorWidget({Key? key, required this.errorMessage}) : super(key: key);
+  const ErrorWidget({Key? key, required this.errorMessage, this.onOk})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(
+        const Icon(
           Icons.error,
           color: Colors.red,
           size: 48,
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         Text(
           errorMessage,
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
           ),
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         ElevatedButton(
           onPressed: () {
-            Navigator.of(context).pop();
+            onOk?.call();
           },
-          child: Text('Cerrar'),
+          child: const Text('Cerrar'),
         ),
       ],
     );
