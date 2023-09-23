@@ -31,41 +31,23 @@ class Auth extends _$Auth {
 }
 
 @riverpod
-class authLogin extends _$authLogin {
-  @override
-  FutureOr<String?> build({
-    required String email,
-    required String password,
-  }) async {
-    final dio = Dio();
-    try {
-      final response = await dio.post(
-        "https://bible-api.deno.dev/auth/login",
-        data: {
-          "email": email,
-          "password": password,
-        },
-      );
-
-      if (response.statusCode == 200) {
-        final token = response.data?["token"];
-        return token;
-      } else {
-        // Manejo de errores en caso de respuesta no exitosa
-        print("Error en la solicitud: ${response.statusCode}");
-        return null; // Otra opción es lanzar una excepción personalizada
-      }
-    } catch (e) {
-      // Manejo de errores en caso de excepciones
-
-      print("Error en la solicitud: $e");
-      return null; // Otra opción es lanzar una excepción personalizada
-    }
-  }
+Future<Response<dynamic>> authLogin(
+  AuthLoginRef ref, {
+  required String email,
+  required String password,
+}) async {
+  final dio = Dio();
+  return dio.post(
+    "https://bible-api.deno.dev/auth/login",
+    data: {
+      "email": email,
+      "password": password,
+    },
+  );
 }
 
 @riverpod
-FutureOr<String?> authRegister(
+Future<Response<dynamic>> authRegister(
   AuthRegisterRef ref, {
   required String email,
   required String username,

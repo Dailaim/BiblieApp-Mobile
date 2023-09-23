@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutterpractic/core/contexts/auth_context.dart';
@@ -114,67 +115,130 @@ class LoginScreen extends HookConsumerWidget {
                 email: email,
                 password: password,
               ));
-              final router = ref.watch(goRouterProvider);
 
               return login.when(
                 data: (data) {
                   /* // Si la autenticación es exitosa, muestra un mensaje y cierra el diálogo.
                   Navigator.of(context).pop(); */
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        "Bienvenido ${data ?? "Fatal error"}",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          if (data != null && data.isNotEmpty) {
-                            ref.read(authProvider.notifier).setToken(data);
-                            router.pop();
-                          }
-                          print("fagsdddddddddddddfdas");
-                          print("token: ${ref.read(authProvider).token}");
-
-                          Navigator.of(context).pop();
-                        },
-                        child: Text('Ir a Home'),
-                      ),
-                    ],
+                  return SuccessWidget(
+                    message: "¡Bienvenido!",
+                    onOk: () {
+                      ref.read(authProvider.notifier).setUser(
+                            email: email,
+                            password: password,
+                            token: data.data["token"],
+                          );
+                      ref.read(goRouterProvider).pop();
+                    },
                   );
                 },
                 error: (error, stack) {
                   // Si hay un error, muestra el mensaje de error.
-                  return Text(
-                    "Error: ${error.toString()}",
-                    style: TextStyle(
-                      color: Colors.red,
-                    ),
+                  return ErrorWidget(
+                    errorMessage:
+                        (error as DioException).response?.data['message'] ??
+                            error.toString(),
                   );
                 },
-                loading: () => Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CircularProgressIndicator(), // Cambio del símbolo de carga
-                    SizedBox(height: 16),
-                    Text(
-                      "Iniciando sesión...",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
-                ),
+                loading: () => LoadingWidget(),
               );
             }),
           ),
         );
       },
+    );
+  }
+}
+
+class SuccessWidget extends StatelessWidget {
+  final String message;
+  final void Function()? onOk;
+
+  const SuccessWidget({Key? key, required this.message, this.onOk})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          Icons.check_circle,
+          color: Colors.green,
+          size: 48,
+        ),
+        SizedBox(height: 16),
+        Text(
+          message,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+        ),
+        SizedBox(height: 16),
+        ElevatedButton(
+          onPressed: () {
+            onOk?.call();
+            Navigator.of(context).pop();
+          },
+          child: Text('OK'),
+        ),
+      ],
+    );
+  }
+}
+
+class LoadingWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        CircularProgressIndicator(),
+        SizedBox(height: 16),
+        Text(
+          "Iniciando sesión...",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class ErrorWidget extends StatelessWidget {
+  final String errorMessage;
+
+  const ErrorWidget({Key? key, required this.errorMessage}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          Icons.error,
+          color: Colors.red,
+          size: 48,
+        ),
+        SizedBox(height: 16),
+        Text(
+          errorMessage,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+        ),
+        SizedBox(height: 16),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text('Cerrar'),
+        ),
+      ],
     );
   }
 }
