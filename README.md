@@ -1,6 +1,4 @@
-Claro, aquí tienes un ejemplo de archivo README para tu repositorio de GitHub para la aplicación Flutter llamada "Bible App". Este README incluirá instrucciones sobre cómo ejecutar la aplicación y cómo utilizar el comando `dart run build_runner watch`:
 
-```markdown
 # Bible App
 
 ![Bible App Screenshot](screenshot.png)
@@ -80,4 +78,4 @@ Este proyecto está bajo la licencia [LICENSE](LICENSE).
 ---
 
 ¡Esperamos que disfrutes usando Bible App para tu estudio bíblico! Si tienes alguna pregunta o encuentras algún problema, no dudes en [contactarnos](mailto:laiglesias.min@gmail.com).
-```
+
