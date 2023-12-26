@@ -6,17 +6,20 @@ import 'package:flutterpractic/modules/home/context/book_context.dart';
 import 'package:flutterpractic/modules/search/services/search_service.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import 'package:niku/niku.dart';
+import 'package:niku/namespace.dart' as n;
+
 class BibleSelectVersion extends HookConsumerWidget {
-  final void Function()? onChanged;
   const BibleSelectVersion({super.key, this.onChanged});
+  final void Function()? onChanged;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bibleContext = ref.watch(bibleProvider);
+    final version = ref.watch(bibleVersionProvider);
     final theme = getTheme(context);
 
-    return DropdownButtonFormField2<BibleVersion>(
-      value: bibleContext.version,
+    return DropdownButtonFormField2<TypeBibleVersion>(
+      value: version,
       isExpanded: true,
       decoration: InputDecoration(
         // Add Horizontal padding using menuItemStyleData.padding so it matches
@@ -35,10 +38,7 @@ class BibleSelectVersion extends HookConsumerWidget {
         padding: EdgeInsets.symmetric(horizontal: 16),
       ),
       onChanged: (newValue) {
-        ref.read(bibleProvider.notifier).state =
-            ref.read(bibleProvider.notifier).state.copyWith(
-                  version: newValue,
-                );
+        ref.read(bibleVersionProvider.notifier).changeVersion(newValue!);
         onChanged?.call();
       },
       style: TextStyle(color: theme.onSurface),
@@ -46,7 +46,7 @@ class BibleSelectVersion extends HookConsumerWidget {
         ...versionsList.map(
           (e) => DropdownMenuItem(
             value: e,
-            child: Text(e.name),
+            child: e.name.n,
           ),
         )
       ],
