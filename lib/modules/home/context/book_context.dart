@@ -1,31 +1,42 @@
-import 'package:flutterpractic/core/enums/books.dart' as bibleBookBase
-    show bibleBooksMap, BibleBook;
+import 'package:flutterpractic/core/enums/books.dart';
 import 'package:flutterpractic/core/enums/versions.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-class BibleContext {
-  BibleVersion? version;
-  bibleBookBase.BibleBook? book;
-  int? chapter;
+part 'book_context.g.dart';
 
-  BibleContext({
-    this.version,
-    this.book,
-    this.chapter,
-  });
+@Riverpod(keepAlive: true)
+class BibleVersion extends _$BibleVersion {
+  @override
+  TypeBibleVersion build() {
+    return versionsList[2];
+  }
 
-  BibleContext copyWith({
-    BibleVersion? version,
-    bibleBookBase.BibleBook? book,
-    int? chapter,
-  }) {
-    return BibleContext(
-      version: version ?? this.version,
-      book: book ?? this.book,
-      chapter: chapter ?? this.chapter,
-    );
+  void changeVersion(TypeBibleVersion version) {
+    state = version;
   }
 }
 
-final bibleProvider =
-    StateProvider((ref) => BibleContext(version: versionsList[2]));
+@Riverpod(keepAlive: true)
+class BibleChapter extends _$BibleChapter {
+  @override
+  int? build() {
+    return null;
+  }
+
+  void changeChapter(int chapter) {
+    state = chapter;
+  }
+}
+
+@Riverpod(keepAlive: true)
+class BibleBook extends _$BibleBook {
+  @override
+  TypeBibleBook? build() {
+    return null;
+  }
+
+  void changeBook(TypeBibleBook book) {
+    state = book;
+  }
+}
