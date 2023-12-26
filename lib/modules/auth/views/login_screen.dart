@@ -130,6 +130,7 @@ class LoginScreen extends HookConsumerWidget {
                               password: password,
                               token: data.data["token"],
                             );
+
                         ref.read(goRouterProvider).pop();
 
                         Navigator.of(context).pop();
@@ -196,6 +197,8 @@ class SuccessWidget extends StatelessWidget {
 }
 
 class LoadingWidget extends StatelessWidget {
+  const LoadingWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return const Column(
