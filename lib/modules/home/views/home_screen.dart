@@ -10,12 +10,22 @@ import 'package:flutterpractic/modules/home/context/book_context.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import 'package:niku/niku.dart';
+import 'package:niku/namespace.dart' as n;
+
+extension ApplyToUseParent on Niku {
+  void _add(Widget Function(Widget) builder) => $parent.add(builder);
+  void get card => _add((w) => Card(
+        child: w,
+      ));
+}
+
 class HomeScreen extends HookConsumerWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bibleContext = ref.watch(bibleProvider);
+    final version = ref.watch(bibleVersionProvider);
 
     final columns = useDynamicColumns(200);
 
@@ -23,7 +33,7 @@ class HomeScreen extends HookConsumerWidget {
       Future.microtask(() async {
         final savedData = await SharedPreferencesService.getData('init');
         if (savedData == null) {
-          _dialogBuilder(context);
+          _alertWelcome(context);
           await SharedPreferencesService.saveData('init', jsonEncode(true));
         }
       });
@@ -34,121 +44,84 @@ class HomeScreen extends HookConsumerWidget {
       appBar: AppBar(
           title: Row(
         children: [
-          Text(bibleContext.version!.short ?? bibleContext.version!.name),
+          Text(version.short ?? version.name),
           const Spacer(),
-          const Text("Biblia App"),
+          "Biblia App".n,
         ],
       )),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: columns, // Número de columnas
-              childAspectRatio: 3 / 2, // Esto controla la proporción del ítem
-              crossAxisSpacing: 10, // Espacio horizontal entre elementos
-              mainAxisSpacing: 10, // Espacio vertical entre elementos
-            ),
-            itemCount: bibleBooks.length,
-            itemBuilder: (context, index) {
-              final book = bibleBooks[index];
-              return Card(
-                child: InkWell(
-                  onTap: () {
-                    ref.read(bibleProvider.notifier).state =
-                        ref.read(bibleProvider.notifier).state.copyWith(
-                              book: book,
-                            );
-                    context.go("/book");
-                  },
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        book.name,
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(
-                        height: 8.0,
-                      ),
-                      Text(
-                        "${book.chapters} capítulos",
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
-              );
+      body: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: columns, // Número de columnas
+          childAspectRatio: 3 / 2, // Esto controla la proporción del ítem
+          crossAxisSpacing: 10, // Espacio horizontal entre elementos
+          mainAxisSpacing: 10, // Espacio vertical entre elementos
+        ),
+        itemCount: bibleBooks.length,
+        itemBuilder: (context, index) {
+          final book = bibleBooks[index];
+          return InkWell(
+            onTap: () {
+              ref.read(bibleBookProvider.notifier).changeBook(book);
+
+              context.go("/book");
             },
-          ),
-        ),
-      ),
+            child: n.Column([
+              book.name.n..textAlign = TextAlign.center,
+              n.Box()..h = 8,
+              "${book.chapters} capítulos".n..textAlign = TextAlign.center,
+            ])
+              ..mainAxisAlignment = MainAxisAlignment.center,
+          ).niku
+            ..card;
+        },
+      ).niku
+        ..padding = const EdgeInsets.all(8.0)
+        ..center,
     );
   }
 
-  Widget _customizedRow(ColorScheme theme) {
-    return RichText(
-      text: TextSpan(
-        children: [
-          const TextSpan(text: 'La app para '),
-          TextSpan(
-            text: 'Estudiar',
-            style: TextStyle(color: theme.surfaceTint),
-          ),
-          const TextSpan(text: ' y '),
-          const TextSpan(text: 'Leer', style: TextStyle(color: Colors.teal)),
-          const TextSpan(text: ' la Biblia que esperabas.'),
-        ],
-        style: TextStyle(
-          fontSize: 20,
-          color: theme.onSurface,
-        ),
+  Widget _alertText(ColorScheme theme) {
+    return n.Column([
+      n.RichText(
+        n.TextSpan('La app para ')
+          ..children = [
+            n.TextSpan(
+              'Estudiar',
+            )..color = theme.surfaceTint,
+            n.TextSpan(' y '),
+            n.TextSpan('Leer')..color = theme.surfaceTint,
+            n.TextSpan(' la Biblia que esperabas.'),
+          ]
+          ..fontSize = 20
+          ..color = theme.onSurface,
       ),
-    );
+    ])
+      ..mainAxisSize = MainAxisSize.min;
   }
 
-  Future<void> _dialogBuilder(BuildContext context) {
-    return showDialog<void>(
+  Future<void> _alertWelcome(BuildContext context) {
+    return n.showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         final theme = getTheme(context);
-        return AlertDialog(
-          title: const Text('Bienvenido a biblia app'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              _customizedRow(theme),
-              const SizedBox(height: 20),
-            ],
-          ),
-          actions: <Widget>[
-            Center(
-                child: Column(
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text(
-                    'estudiar la Biblia',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ),
-                const SizedBox(width: 20),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: theme.secondaryContainer,
-                  ),
-                  child: Text(
-                    'Preguntas frecuentes',
-                    style: TextStyle(fontSize: 20, color: theme.secondary),
-                  ),
-                ),
-              ],
-            )),
-          ],
-        );
+        return n.Alert()
+          ..title = 'Bienvenido a biblia app'.n
+          ..content = _alertText(theme)
+          ..actionsAlignment = MainAxisAlignment.center
+          ..actions = [
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: 'estudiar la Biblia'.n..fontSize = 20,
+            ),
+            const SizedBox(width: 20),
+            ElevatedButton(
+              onPressed: () {},
+              child: 'Preguntas frecuentes'.n
+                ..fontSize = 20
+                ..color = theme.secondary,
+            ).niku
+          ];
       },
     );
   }
