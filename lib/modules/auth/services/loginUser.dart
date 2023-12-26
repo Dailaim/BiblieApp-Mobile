@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterpractic/shared/constants/url_api.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 Future<dynamic> loginUser({
@@ -12,8 +13,7 @@ Future<dynamic> loginUser({
   final dio = Dio();
 
   try {
-    final response =
-        await dio.post("https://bible-api.deno.dev/auth/login", data: {
+    final response = await dio.post("$urlApi/auth/login", data: {
       "email": email,
       "password": password,
     });
