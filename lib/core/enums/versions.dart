@@ -1,22 +1,22 @@
 import 'package:flutterpractic/core/enums/books.dart';
 
-class BibleVersion {
+class TypeBibleVersion {
   final String url;
   final String name;
   final String? short;
 
-  Map<String, BibleBook> booksMaps = bibleBooksMap;
+  Map<String, TypeBibleBook> booksMaps = bibleBooksMap;
 
-  BibleVersion({required this.url, required this.name, this.short});
+  TypeBibleVersion({required this.url, required this.name, this.short});
 
-  BibleVersion.fromJson(Map<String, dynamic> json)
+  TypeBibleVersion.fromJson(Map<String, dynamic> json)
       : url = json['url'],
         name = json['name'],
         short = json['short'],
         booksMaps = (json['booksMaps'] as Map<String, dynamic>)
-            .map<String, BibleBook>(
-                (k, v) => MapEntry(k, BibleBook.fromJson(v)))
-            .cast<String, BibleBook>();
+            .map<String, TypeBibleBook>(
+                (k, v) => MapEntry(k, TypeBibleBook.fromJson(v)))
+            .cast<String, TypeBibleBook>();
 
   Map<String, dynamic> toJson() {
     return {
@@ -34,7 +34,7 @@ class BibleVersion {
     String? name,
     String? short,
   }) {
-    return BibleVersion(
+    return TypeBibleVersion(
       url: url ?? this.url,
       name: name ?? this.name,
       short: short ?? this.short,
@@ -43,20 +43,20 @@ class BibleVersion {
 }
 
 final bibleVersionMap = {
-  'rv1960': BibleVersion(
+  'rv1960': TypeBibleVersion(
     url: 'rv1960',
     name: 'Reina Valera 1960',
   ),
-  'rv1995': BibleVersion(
+  'rv1995': TypeBibleVersion(
     url: 'rv1995',
     name: 'Reina Valera 1995',
   ),
-  'nvi': BibleVersion(
+  'nvi': TypeBibleVersion(
     url: 'nvi',
     short: 'Internacional',
     name: 'Nueva Versión Internacional',
   ),
-  'dhh': BibleVersion(
+  'dhh': TypeBibleVersion(
     url: 'dhh',
     name: 'Dios Habla Hoy',
   ),
