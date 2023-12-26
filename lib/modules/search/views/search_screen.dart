@@ -10,6 +10,9 @@ import 'package:flutterpractic/shared/widgets/select_version.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import 'package:niku/niku.dart';
+import 'package:niku/namespace.dart' as n;
+
 // FIXME: This is a workaround for the issue #1
 
 class SearchScreen extends HookConsumerWidget {
@@ -17,7 +20,7 @@ class SearchScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bibleContext = ref.watch(bibleProvider);
+    final version = ref.watch(bibleVersionProvider);
 
     final results = useState(<SearchResult>[]);
 
@@ -25,7 +28,7 @@ class SearchScreen extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Search"),
+        title: "Search".n,
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -44,7 +47,7 @@ class SearchScreen extends HookConsumerWidget {
             ElevatedButton(
               onPressed: () async {
                 final data = await searchBible(
-                  version: bibleContext.version!,
+                  version: version,
                   query: searchController.value.text,
                   testament: "old",
                 );
@@ -53,7 +56,7 @@ class SearchScreen extends HookConsumerWidget {
                 }
                 results.value = data.data;
               },
-              child: const Text("Search"),
+              child: "Search".n,
             ),
             Expanded(
               child: ListView.builder(
@@ -76,11 +79,13 @@ class SearchScreen extends HookConsumerWidget {
                       ),
                     ),
                     onTap: () {
-                      ref.read(bibleProvider.notifier).state =
-                          ref.read(bibleProvider.notifier).state.copyWith(
-                                book: result.book,
-                                chapter: result.chapter,
-                              );
+                      ref
+                          .read(bibleBookProvider.notifier)
+                          .changeBook(result.book);
+                      ref
+                          .read(bibleChapterProvider.notifier)
+                          .changeChapter(result.chapter);
+
                       context.go('/book/chapter');
                     },
                   );
