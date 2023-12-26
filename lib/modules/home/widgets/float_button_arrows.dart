@@ -8,45 +8,38 @@ class FloatButtonArrow extends HookConsumerWidget {
 
   @override
   build(BuildContext context, WidgetRef ref) {
-    final bibleContext = ref.watch(bibleProvider);
-
-    final chapterNumber = bibleContext.chapter!;
+    final chapter = ref.watch(bibleChapterProvider)!;
+    final book = ref.watch(bibleBookProvider)!;
 
     return Column(
       children: [
-        if (chapterNumber == 1)
+        if (chapter == 1)
           const SizedBox.shrink()
         else
           FloatingActionButton(
             heroTag: 'back',
             child: const Icon(Icons.arrow_back),
             onPressed: () {
-              ref.read(bibleProvider.notifier).state =
-                  ref.read(bibleProvider.notifier).state.copyWith(
-                        chapter: chapterNumber - 1 < 1 ? 1 : chapterNumber - 1,
-                      );
+              ref.read(bibleChapterProvider.notifier).changeChapter(
+                    chapter - 1 < 1 ? 1 : chapter - 1,
+                  );
 
               scrollControllerAnimated(scrollController);
             },
           ),
         const SizedBox(height: 8.0),
-        if (chapterNumber + 1 > bibleContext.book!.chapters)
+        if (chapter + 1 > book.chapters)
           const SizedBox.shrink()
         else
           FloatingActionButton(
             heroTag: 'forward',
             child: const Icon(Icons.arrow_forward),
             onPressed: () {
-              ref.read(bibleProvider.notifier).state =
-                  ref.read(bibleProvider.notifier).state.copyWith(
-                        chapter: chapterNumber + 1 > bibleContext.book!.chapters
-                            ? bibleContext.book!.chapters
-                            : chapterNumber + 1,
-                      );
+              ref.read(bibleChapterProvider.notifier).changeChapter(
+                    chapter + 1 > book.chapters ? book.chapters : chapter + 1,
+                  );
 
               scrollControllerAnimated(scrollController);
-
-              // Aquí debes añadir la lógica para ir al próximo capítulo.
             },
           ),
       ],
