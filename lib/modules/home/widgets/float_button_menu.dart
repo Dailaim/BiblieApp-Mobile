@@ -5,6 +5,9 @@ import 'package:flutterpractic/core/contexts/auth_context.dart';
 import 'package:flutterpractic/shared/widgets/select_version.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import 'package:niku/niku.dart';
+import 'package:niku/namespace.dart' as n;
+
 class FloatButtonHome extends HookConsumerWidget {
   const FloatButtonHome({Key? key}) : super(key: key);
 
@@ -74,33 +77,19 @@ class FloatButtonHome extends HookConsumerWidget {
         FloatingActionButton.small(
           onPressed: () {
             final state = key.value.currentState;
-            _dialogBuilder(context);
+            n.showDialog(
+              context: context,
+              builder: (context) => n.Alert()
+                ..title = 'Selecciona una Biblia'.n
+                ..content = BibleSelectVersion(
+                    onChanged: () => Navigator.of(context).pop())
+                ..freezed,
+            );
             if (state != null) state.toggle();
           },
           child: const Icon(Icons.book_sharp),
         )
       ],
-    );
-  }
-
-  Future<void> _dialogBuilder(BuildContext context) {
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Selecciona una Biblia'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              BibleSelectVersion(
-                onChanged: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }
