@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutterpractic/core/enums/books.dart';
 import 'package:flutterpractic/core/enums/versions.dart';
+import 'package:flutterpractic/shared/constants/url_api.dart';
 
 // FIXME: Create a riverpod future for this service
 
@@ -11,7 +12,7 @@ Future<Search?> searchBible({
   String? testament,
   int? take,
   int? page,
-  required BibleVersion version,
+  required TypeBibleVersion version,
 }) async {
   assert(testament != null && testament.isNotEmpty,
       'The testament cannot be empty.');
@@ -22,7 +23,7 @@ Future<Search?> searchBible({
     return null;
   }
 
-  final String baseURL = "https://bible-api.deno.dev/api/${version.url}/search";
+  final String baseURL = "$urlApi/api/read/${version.url}/search";
 
   Map<String, dynamic> queryParameters = {
     'q': query,
@@ -70,7 +71,7 @@ class SearchResult {
   String? study;
   int number;
   int id;
-  BibleBook book;
+  TypeBibleBook book;
   int chapter;
 
   SearchResult.fromJson(Map<String, dynamic> json)
