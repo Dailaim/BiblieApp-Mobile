@@ -10,23 +10,11 @@ part 'auth_router.g.dart';
 @riverpod
 ShellRoute authRouter(AuthRouterRef ref) {
   return ShellRoute(
-    builder: (context, state, child) {
-      return HookConsumer(
-        builder: (context, ref, _) {
-          return child;
-        },
-      );
-    },
+    builder: (_, _0, child) => child,
     routes: [
       GoRoute(
         path: "/auth",
-        pageBuilder: (context, state) {
-          return NoTransitionPage(
-            key: state.pageKey,
-            name: state.name,
-            child: const SizedBox(),
-          );
-        },
+        builder: (context, state) => const SizedBox(),
         routes: [
           GoRoute(
             path: 'login',
