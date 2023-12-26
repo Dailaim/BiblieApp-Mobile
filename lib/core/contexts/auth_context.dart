@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutterpractic/core/models/user.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutterpractic/shared/constants/url_api.dart';
 
 part 'auth_context.g.dart';
 
@@ -38,7 +39,7 @@ Future<Response<dynamic>> authLogin(
 }) async {
   final dio = Dio();
   return dio.post(
-    "https://bible-api.deno.dev/auth/login",
+    "$urlApi/auth/login",
     data: {
       "email": email,
       "password": password,
@@ -55,8 +56,7 @@ Future<Response<dynamic>> authRegister(
 }) async {
   final dio = Dio();
 
-  final response =
-      await dio.post("https://bible-api.deno.dev/auth/signup", data: {
+  final response = await dio.post("$urlApi/auth/signup", data: {
     "email": email,
     "user": username,
     "password": password,
